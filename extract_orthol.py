@@ -8,13 +8,26 @@
 ## Loading data
 
 # List of genomes IDs
-ID_H <- c() # Honeybee-bacterial genomes
-ID_B <- c() # Honeybee-bacterial genomes
-ID_O <- c() # Honeybee-bacterial genomes
+ID_H = ["F262","F263","F261"] # Honeybee-bacterial genomes
+ID_B = ["F225","F228","F233","F237"] # Bumblebee-bacterial genomes
+ID_O = [] # Outgroup bacterial genomes
 
-# Loading ortholog table line by line
-ortho_tab = open("Genefamilies_all.txt",'r')
+# Loading ortholog table and creating output files
+ortho_tab = open("../Genefamilies_all.txt",'r')
+bumble_genes = open("bumble_genes.txt",'w')
+honey_genes = open("honey_genes.txt",'w')
 #==========================================
 
-for line in ortho_tab:
-    
+for line in ortho_tab:  # Each line is a gene family
+    tmp = line.split("\t")  # split line by word (tab separated)
+    B = False; H = False  # Is this family present in bumble/honeybees
+    for word in tmp: # For each word (a word is: "strain|gene")
+        gene = word.split("|")  # sparates strain from gene in a list
+        if gene[0] in ID_H: # if the strain is in honeybee
+            H = True
+        if gene[0] in ID_B: # if the strain is in bumblebee
+            B = True
+    if B and not H:  # if gene family only present in bumblebees
+        bumble_genes.write(line)  # writing family to bumblebee file
+    if H and not B:  # if gene family only present in honeybees
+        honey_genes.write(line)  # writing family to honeybee file
