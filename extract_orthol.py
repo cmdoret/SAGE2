@@ -8,9 +8,12 @@
 ## Loading data
 
 # List of genomes IDs
-ID_H = ["F262","F263","F261"] # Honeybee-bacterial genomes
-ID_B = ["F225","F228","F233","F237"] # Bumblebee-bacterial genomes
-ID_O = [] # Outgroup bacterial genomes
+ID_H = ['F259','F260','F261','F262','F263'] # Honeybee-bacterial genomes
+ID_B = ['F225','F230', 'F233', 'F234','F236','F237',
+        'F228', 'F245','F246','F247'] # Bumblebee-bacterial genomes
+ID_O = ['JF72','JF73','JF74','JF75','JF76','JG29',
+        'JG30','L183','L184', 'L185', 'L186','LA14',
+        'LA2', 'LDB', 'LGAS', 'LHV','LJP', 'WANG'] # Outgroup bacterial genomes
 
 # Loading ortholog table and creating output files
 ortho_tab = open("../Genefamilies_all.txt",'r')
@@ -31,3 +34,8 @@ for line in ortho_tab:  # Each line is a gene family
         bumble_genes.write(line)  # writing family to bumblebee file
     if H and not B:  # if gene family only present in honeybees
         honey_genes.write(line)  # writing family to honeybee file
+B_pascuorum=['F225','F230', 'F233', 'F234','F236','F237']
+B_bohemicus=['F228', 'F245','F246','F247']
+A_melifera=['F259','F260','F261','F262','F263']
+Out_lacto=['JF72','JF73','JF74','JF75','JF76','JG29','JG30','L183','L184', 'L185', 'L186']
+Outgroup=['LA14', 'LA2', 'LDB', 'LGAS', 'LHV','LJP', 'WANG']
