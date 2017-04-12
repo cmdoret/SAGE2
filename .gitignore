@@ -1,6 +1,6 @@
 ## references are excluded
 pictures/
-
+data/gene_sets/
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
