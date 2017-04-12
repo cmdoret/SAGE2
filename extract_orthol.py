@@ -17,13 +17,13 @@ ID_O = ['LA14','LA2','LDB','LGAS','LHV','LJP','WANG','JG29'] # Outgroup bacteria
 
 # Loading ortholog table and creating output files
 ortho_tab = open("./data/mclOutput",'r')
-B_genes = open("../data/gene_sets/B_genes.txt",'w')
-H_genes = open("../data/gene_sets/H_genes.txt",'w')
-HO_genes = open("../data/gene_sets/HO_genes.txt",'w')
-BH_genes = open("../data/gene_sets/BH_genes.txt",'w')
-BO_genes = open("../data/gene_sets/BO_genes.txt",'w')
-BHO_genes = open("../data/gene_sets/BHO_genes.txt",'w')
-O_genes = open("../data/gene_sets/O_genes.txt",'w')
+B_genes = open("./data/gene_sets/B_genes.txt",'w')
+H_genes = open("./data/gene_sets/H_genes.txt",'w')
+HO_genes = open("./data/gene_sets/HO_genes.txt",'w')
+BH_genes = open("./data/gene_sets/BH_genes.txt",'w')
+BO_genes = open("./data/gene_sets/BO_genes.txt",'w')
+BHO_genes = open("./data/gene_sets/BHO_genes.txt",'w')
+O_genes = open("./data/gene_sets/O_genes.txt",'w')
 #==========================================
 
 for line in ortho_tab:  # Each line is a gene family
