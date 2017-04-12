@@ -10,4 +10,5 @@ $(SDIR)/gene_number.csv : $(SDIR)/*genes.txt
 	bash gene_counter.sh
 
 $(SDIR)/*genes.txt : $(GFAM) extract_orthol.py
+	mkdir -p data/gene_sets
 	python extract_orthol.py
