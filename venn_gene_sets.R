@@ -1,6 +1,6 @@
-setwd("~/Documents/Master/sem_2/SAGE2/src/") 
+
 library(VennDiagram)
-gene_sets <- read.csv(file = "../data/gene_sets/gene_number.csv",header=F)
+gene_sets <- read.csv(file = "./data/gene_sets/gene_number.csv",header=F)
 B <- gene_sets$V2[gene_sets$V1=='B']+
   gene_sets$V2[gene_sets$V1=='BH']+
   gene_sets$V2[gene_sets$V1=='BO']+

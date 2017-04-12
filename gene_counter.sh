@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ../data/gene_sets/
+cd ./data/gene_sets/
 echo '' > gene_number.csv
 
 for i in *.txt;

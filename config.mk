@@ -1,3 +1,3 @@
  
-GFAM=../data/mclOutput
-SDIR=../data/gene_sets/
+GFAM=./data/mclOutput
+SDIR=./data/gene_sets/

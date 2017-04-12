@@ -16,7 +16,7 @@ ID_B = ['F225','F230','F233','F234','F236','F237',
 ID_O = ['LA14','LA2','LDB','LGAS','LHV','LJP','WANG','JG29'] # Outgroup bacterial genomes
 
 # Loading ortholog table and creating output files
-ortho_tab = open("../data/mclOutput",'r')
+ortho_tab = open("./data/mclOutput",'r')
 B_genes = open("../data/gene_sets/B_genes.txt",'w')
 H_genes = open("../data/gene_sets/H_genes.txt",'w')
 HO_genes = open("../data/gene_sets/HO_genes.txt",'w')
