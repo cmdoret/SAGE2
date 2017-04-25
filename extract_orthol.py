@@ -54,6 +54,8 @@ for line in ortho_tab:  # Each line is a gene family
     elif not B and not H and O:
         O_genes.write(line)
 
+
+
 ortho_tab.close();BHO_genes.close()
 B_genes.close();BH_genes.close();BO_genes.close()
 H_genes.close();HO_genes.close();O_genes.close()
