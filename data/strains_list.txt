@@ -32,7 +32,7 @@ L.amylovorus	outgtoup	Lamy	LA2	NC_014724
 L.delbrueckii	outgroup	Ldel	LDB	NC_008054
 L.gasseri	outgroup	Lgas	LGAS	NC_008530
 L.helveticus	outgroup	Lhel	LHV	NC_010080
-L.johnsonii	outgroup	Ljoh	LPJ	NC_017477
+L.johnsonii	outgroup	Ljoh	LJP	NC_017477
 L.kefiranofaciens	outgroup	Lkef	WANG	NC_015602
 L.undefined	A.mellifera	wkb8	WB8	CP009531
 L.undefined	A.mellifera	wkb10	WB10	unknown

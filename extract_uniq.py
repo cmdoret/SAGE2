@@ -9,3 +9,5 @@
 # Iterate over strains
 # Iterate over genes in strain's genomes: for each gene, check if already in
 # corresponding gene_set corresponding
+
+# Not crucial for now
