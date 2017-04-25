@@ -13,7 +13,7 @@ strains = ['JF72','F259','JG30','JF76','F260','F261','F262','F263',
         'F228','F245','F246','F247','LA14','LA2','LDB','LGAS','LHV','LJP','WANG',
         'JG29']
 
-outfile=open("core_set.txt",'w')
+outfile=open("data/core_set.txt",'w')
 k=0
 with open("data/gene_sets/BHO_genes.txt") as ortho:
     for line in ortho:

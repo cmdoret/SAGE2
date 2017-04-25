@@ -1,3 +1,5 @@
+source("https://bioconductor.org/biocLite.R")
+biocLite()
 
 library("topGO")
 library("org.Ce.eg.db")
