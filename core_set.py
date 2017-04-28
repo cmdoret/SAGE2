@@ -1,4 +1,5 @@
-from sys import argv,join,path
+from sys import argv
+from os.path import join
 from copy import copy
 import re
 # This script extracts gene families common to all strains in host groups given
@@ -7,7 +8,7 @@ import re
 # 25.04.2017
 
 # Only keeping parameters containing one species group
-param = [h for h in sys.argv[1:] if re.compile(r'[BHO]').search(h)]
+param = [h for h in argv[1:] if re.compile(r'[BHO]').search(h)]
 groups = []
 
 # Parsing parameters so that BHO works like B H O
@@ -25,13 +26,16 @@ all_strains = {'H':['JF72','F259','JG30','JF76','F260','F261','F262','F263','JF7
 'O':['LA14','LA2','LDB','LGAS','LHV','LJP','WANG','JG29']}
 
 # Subsetting strains with hosts matching input parameters
-strains = [all_strains[g] for g in group_set]
+strains=[]
+for g in group_set:
+    strains += all_strains[g]
 
+print(group_set,len(strains))
 # Generating filenames from input parameters
-in_name = ''.join(sorted(groups)) + "_genes.txt"
-out_name = ''.join(sorted(groups)) + "_core_set.txt"
+in_name = ''.join(sorted(group_set)) + "_genes.txt"
+out_name = ''.join(sorted(group_set)) + "_core_set.txt"
 
-outfile=open(join("data",out_name),'w') # Creating new file/erasing previous version
+outfile=open(join("data","gene_sets",out_name),'w') # Creating new file/erasing previous version
 with open(join("data","gene_sets",in_name),'r') as ortho:
     # Opening MCL ortholog table
     for line in ortho:
