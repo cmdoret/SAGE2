@@ -1,18 +1,39 @@
+from sys import argv,join,path
 from copy import copy
-# This script extracts gene families common to all strains.
+import re
+# This script extracts gene families common to all strains in host groups given
+# as command line arguments B (Bumblebee), H (Honeybee) and O (Outgroup).
 # Laurent Casini, Cyril Matthey-Doret
 # 25.04.2017
 
-# List of all strains:
-strains = ['JF72','F259','JG30','JF76','F260','F261','F262','F263',
-        'JF73','JF74','JF75','WB8','WB10','L185','L186',
-        'L184','L183','F225','F230','F233','F234','F236','F237',
-        'F228','F245','F246','F247','LA14','LA2','LDB','LGAS','LHV','LJP','WANG',
-        'JG29']
+# Only keeping parameters containing one species group
+param = [h for h in sys.argv[1:] if re.compile(r'[BHO]').search(h)]
+groups = []
 
-outfile=open("data/core_set.txt",'w') # Creating new file/erasing previous version
-with open("data/gene_sets/BHO_genes.txt") as ortho:
-    # Opening Mcl ortholog table
+# Parsing parameters so that BHO works like B H O
+for p in param:
+    for c in p:
+        groups += c
+
+# Preventing duplicate groups
+group_set = set(groups)
+
+# List of all strains:
+all_strains = {'H':['JF72','F259','JG30','JF76','F260','F261','F262','F263','JF73','JF74',
+     'JF75','WB8','WB10','L185','L186','L184','L183'],
+'B':['F225','F230','F233','F234','F236','F237','F228','F245','F246','F247'],
+'O':['LA14','LA2','LDB','LGAS','LHV','LJP','WANG','JG29']}
+
+# Subsetting strains with hosts matching input parameters
+strains = [all_strains[g] for g in group_set]
+
+# Generating filenames from input parameters
+in_name = ''.join(sorted(groups)) + "_genes.txt"
+out_name = ''.join(sorted(groups)) + "_core_set.txt"
+
+outfile=open(join("data",out_name),'w') # Creating new file/erasing previous version
+with open(join("data","gene_sets",in_name),'r') as ortho:
+    # Opening MCL ortholog table
     for line in ortho:
         # iterating over lines of ortholog table (gene families)
         tmp_str = copy(strains)
@@ -31,5 +52,4 @@ with open("data/gene_sets/BHO_genes.txt") as ortho:
             # at the end of the line, checking if all strains were removed
             outfile.write(line)
             # if so, writing line to output file
-
 outfile.close()
