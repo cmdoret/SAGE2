@@ -20,4 +20,4 @@ $(SDIR)/ : $(GFAM) extract_orthol.py
 	mkdir -p data/gene_sets
 	python extract_orthol.py
 	# Splitting orthologs into core sets of each group
-	for f in B BH BHO BO H HO;do python core_set.py $$f;done;
+	for f in B BH BHO BO H HO O;do python core_set.py $$f;done;
