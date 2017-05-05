@@ -30,7 +30,6 @@ strains=[]
 for g in group_set:
     strains += all_strains[g]
 
-print(group_set,len(strains))
 # Generating filenames from input parameters
 in_name = ''.join(sorted(group_set)) + "_genes.txt"
 out_name = ''.join(sorted(group_set)) + "_core_set.txt"

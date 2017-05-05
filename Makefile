@@ -8,11 +8,11 @@ Venn_gene_sets.pdf : $(SDIR)/gene_number.csv $(SDIR)/core_number.csv scripts/ven
 	Rscript scripts/venn_gene_sets.R
 
 # Filling gene sets table
-$(SDIR)/gene_number.csv : $(SDIR)/
+$(SDIR)/gene_number.csv : $(wildcard $(SDIR)/*_genes.txt)
 	bash scripts/gene_counter.sh $@ "genes.txt"
 
 # Filling core genes table
-$(SDIR)/core_number.csv : $(SDIR)/
+$(SDIR)/core_number.csv : $(wildcard $(SDIR)/*_core_set.txt)
 	bash scripts/gene_counter.sh $@ "core_set.txt"
 
 # Splitting orthologs into groups
