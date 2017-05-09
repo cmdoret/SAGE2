@@ -49,4 +49,6 @@ close(con)  # Closing file connection
 out_name <- strsplit(basename(filepath),".",fixed=T)[[1]][1]  # Extracting input file group (B, BH, BHO, H, HO, O)
 out_table <- out_table[!is.na(out_table$annotation),]  # Removing first row containing NAs (used to initiate dataframe)
 write.table(file = paste0('./data/annotations/',out_name,'_annotations.txt'),out_table,col.names = F,row.names = F,quote = F)
+print(paste0("Wrote annotation file for ",out_name,". Contained ",length(out_table),
+             " annotated gene families. Found ",length(unique(out_table)),  " unique functions."))
 # Writing functions to file

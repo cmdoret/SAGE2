@@ -1,7 +1,7 @@
 include config.mk
 
 .PHONY : all
-all : Venn_gene_sets.pdf
+all : Venn_gene_sets.pdf $(ANNOT)
 
 # Generating Venn diagram
 Venn_gene_sets.pdf : $(SDIR)/gene_number.csv $(SDIR)/core_number.csv scripts/venn_gene_sets.R
@@ -25,6 +25,7 @@ $(SDIR)/B_core_set.txt : $(GFAM) scripts/core_set.py
 	mkdir -p data/gene_sets
 	for f in B BH BHO BO H HO O;do python scripts/core_set.py $$f;done;
 
-$(ANNOT)/B_annotations.txt : scripts/ortholog_annotator.R $(SDIR)/B_genes.txt $(SDIR)/B_core_set.txt
+# Extract annotations (Long runtime!)
+$(ANNOT) : scripts/ortholog_annotator.R $(SDIR)/B_genes.txt $(SDIR)/B_core_set.txt
 	mkdir -p $(ANNOT)
 	for f in $(SDIR)/*.txt; do Rscript $< $$f;done
