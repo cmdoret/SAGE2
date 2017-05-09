@@ -2,6 +2,7 @@ import itertools
 from os.path import join
 import pandas as pd
 from Bio import SeqIO
+import re
 # The purpose of this script is to extract a list of genes that are orthologous
 # between bumblebee (B)- and honeybee (H)-specific bacterial species. It takes
 # an ortholog table as input and output a similar table containing only B-H
@@ -54,7 +55,7 @@ for group in ID:  # Iterating over hosts (H, B and O)
         prefix = gnm[gnm.OrthoMCL_prefix==strain].Strain_prefix.values[0]
         # Extracting strain prefix from strain list for given orthoMCL prefix
         fa_file = join('data','genomes',prefix + '.faa')
-        fasta[group] =[strain + '|' + gene.id.split('_')[-1]
+        fasta[group] =[strain + '|' + filter(None,re.split("[|_]",gene.id))[-1]
                                for gene in SeqIO.parse(fa_file,'fasta')]
         # Using BioPython to parse fasta file and store all genes in dictionary
         # Only the gene ID is extracted and the strain name is added to form
