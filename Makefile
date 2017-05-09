@@ -24,3 +24,7 @@ $(SDIR)/B_genes.txt : $(GFAM) scripts/extract_orthol.py
 $(SDIR)/B_core_set.txt : $(GFAM) scripts/core_set.py
 	mkdir -p data/gene_sets
 	for f in B BH BHO BO H HO O;do python scripts/core_set.py $$f;done;
+
+$(ANNOT)/B_annotations.txt : scripts/ortholog_annotator.R $(SDIR)/B_genes.txt $(SDIR)/B_core_set.txt
+	mkdir -p $(ANNOT)
+	for f in $(SDIR)/*.txt; do Rscript $< $$f;done
