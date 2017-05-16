@@ -1,0 +1,6 @@
+Each strain's FASTA files (Protein sequences) were annotated using EggNOG-mapper available on the Eggnogdb website.
+Parameters used:
+Mapping mode: DIAMOND
+Taxonomic scorpe: Firmucutes
+Orthologs: Use all orthologs (prioritize coverage)
+Gene ontology evidence: Use non-electronic terms (prioritize coverage)

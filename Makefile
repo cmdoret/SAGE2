@@ -1,7 +1,10 @@
 include config.mk
 
+freq=$(wildcard $(SDIR)/*_genes.txt)
+freqs=$(patsubst $(SDIR)%_genes.txt, $(FREQ)/%_gfreq.txt, $(freq))
+
 .PHONY : all
-all : Venn_gene_sets.pdf $(ANNOT)
+all : Venn_gene_sets.pdf $(ANNOT) $(FREQ)/B_gfreq.txt
 
 # Generating Venn diagram
 Venn_gene_sets.pdf : $(SDIR)/gene_number.csv $(SDIR)/core_number.csv scripts/venn_gene_sets.R
@@ -29,3 +32,12 @@ $(SDIR)/B_core_set.txt : $(GFAM) scripts/core_set.py
 $(ANNOT) : scripts/ortholog_annotator.R $(SDIR)/B_genes.txt $(SDIR)/B_core_set.txt
 	mkdir -p $(ANNOT)
 	for f in $(SDIR)/*.txt; do Rscript $< $$f;done
+
+$(FREQ)/B_gfreq.txt: scripts/gene_freq.py $(SDIR)/B_genes.txt
+	mkdir -p $(FREQ)
+	for f in B BH BHO BO H HO O;do python $< $(SDIR)/$$f"_genes.txt";done;
+	
+.PHONY: test
+test: 
+	echo $(freq)
+	echo $(freqs)
