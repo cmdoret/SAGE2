@@ -44,7 +44,7 @@ addlab <- function(lab, x, y, offset = 0) {
             draw = FALSE,gp = gpar(cex=0.8,col="darkblue"))
 }
 
-pdf("Venn_gene_sets.pdf")
+pdf("plots/Venn_gene_sets.pdf")
 grid.newpage()
 Venn <- draw.triple.venn(euler.d = T,scaled = T, 
                  area1 = Venn_area["B"], 

@@ -3,10 +3,11 @@ include config.mk
 freqs=$(patsubst $(SDIR)%_genes.txt, $(FREQ)/%_gfreq.txt, $(GROUPS))
 
 .PHONY : all
-all : Venn_gene_sets.pdf $(ANNOT) $(FREQ)/B_gfreq.txt
+all : plots/Venn_gene_sets.pdf $(ANNOT) $(FREQ)/B_gfreq.txt plots/B_histo.pdf
 
 # Generating Venn diagram
-Venn_gene_sets.pdf : $(SDIR)/gene_number.csv $(SDIR)/core_number.csv scripts/venn_gene_sets.R
+plots/Venn_gene_sets.pdf : $(SDIR)/gene_number.csv $(SDIR)/core_number.csv scripts/venn_gene_sets.R
+	mkdir -p plots
 	Rscript scripts/venn_gene_sets.R
 
 # Filling gene sets table
@@ -32,6 +33,10 @@ $(ANNOT) : scripts/ortholog_annotator.R $(SDIR)/B_genes.txt $(SDIR)/B_core_set.t
 	mkdir -p $(ANNOT)
 	for f in $(SDIR)/*.txt; do Rscript $< $$f;done
 
-$(FREQ)/B_gfreq.txt: scripts/gene_freq.py $(SDIR)/B_genes.txt
+$(FREQ)/B_gfreq.txt : scripts/gene_freq.py $(SDIR)/B_genes.txt
 	mkdir -p $(FREQ)
-	for f in $(GROUPS);do python $< $(SDIR)/$$f"_genes.txt";done;
+	for f in $(GROUPS);do python $< $(SDIR)/"$$f"_genes.txt;done;
+
+plots/B_histo.pdf : scripts/histo_freq.R $(FREQ)/B_gfreq.txt
+	mkdir -p plots
+	for f in $(GROUPS);do Rscript $< $(FREQ)/"$$f"_gfreq.txt;done;

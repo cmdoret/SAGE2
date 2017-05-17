@@ -17,6 +17,6 @@ group_name = basename(ortho_file).split('_')[0]  # Extract group from filename
 path = 'data/frequencies'
 out_name = join(path,(group_name+'_gfreq.txt'))
 out_freq = open(out_name,'w')  # Opening new output file for frequencies
-print(','.join(store_freq))
 out_freq.write(','.join(store_freq))  # Writing frequency list to output file
 out_freq.close()
+print("Processed frequencies for group ", out_name)
