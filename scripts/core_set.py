@@ -1,11 +1,13 @@
-from sys import argv
-from os.path import join
-from copy import copy
-import re
+
 # This script extracts gene families common to all strains in host groups given
 # as command line arguments B (Bumblebee), H (Honeybee) and O (Outgroup).
 # Laurent Casini, Cyril Matthey-Doret
 # 25.04.2017
+
+from sys import argv
+from os.path import join
+from copy import copy
+import re
 
 # Only keeping parameters containing one species group
 param = [h for h in argv[1:] if re.compile(r'[BHO]').search(h)]
@@ -34,7 +36,8 @@ for g in group_set:
 in_name = ''.join(sorted(group_set)) + "_genes.txt"
 out_name = ''.join(sorted(group_set)) + "_core_set.txt"
 
-outfile=open(join("data","gene_sets",out_name),'w') # Creating new file/erasing previous version
+outfile=open(join("data","gene_sets",out_name),'w')
+# Creating new file/erasing previous version
 with open(join("data","gene_sets",in_name),'r') as ortho:
     # Opening MCL ortholog table
     for line in ortho:

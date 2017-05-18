@@ -1,8 +1,4 @@
-import itertools
-from os.path import join
-import pandas as pd
-from Bio import SeqIO
-import re
+
 # The purpose of this script is to extract a list of genes that are orthologous
 # between bumblebee (B)- and honeybee (H)-specific bacterial species. It takes
 # an ortholog table as input and output a similar table containing only B-H
@@ -11,6 +7,12 @@ import re
 # the genes.
 # Laurent Casini, Cyril Matthey-Doret
 # 04.04.2017
+
+import itertools
+from os.path import join
+import pandas as pd
+from Bio import SeqIO
+import re
 
 ## Loading data
 files = {}  # Data structure containing output files

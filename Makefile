@@ -21,12 +21,12 @@ $(SDIR)/core_number.csv : $(SDIR)/B_core_set.txt
 # Splitting orthologs into groups
 $(SDIR)/B_genes.txt : $(GFAM) scripts/extract_orthol.py
 	mkdir -p data/gene_sets
-	python scripts/extract_orthol.py
+	python2 scripts/extract_orthol.py
 
 # Extracting core sets (present in every strain of their group)
 $(SDIR)/B_core_set.txt : $(GFAM) scripts/core_set.py
 	mkdir -p data/gene_sets
-	for f in $(GROUPS);do python scripts/core_set.py $$f;done;
+	for f in $(GROUPS);do python2 scripts/core_set.py $$f;done;
 
 # Extract annotations (Long runtime!)
 $(ANNOT) : scripts/ortholog_annotator.R $(SDIR)/B_genes.txt $(SDIR)/B_core_set.txt
@@ -35,7 +35,7 @@ $(ANNOT) : scripts/ortholog_annotator.R $(SDIR)/B_genes.txt $(SDIR)/B_core_set.t
 
 $(FREQ)/B_gfreq.txt : scripts/gene_freq.py $(SDIR)/B_genes.txt
 	mkdir -p $(FREQ)
-	for f in $(GROUPS);do python $< $(SDIR)/"$$f"_genes.txt;done;
+	for f in $(GROUPS);do python2 $< $(SDIR)/"$$f"_genes.txt;done;
 
 plots/B_histo.pdf : scripts/histo_freq.R $(FREQ)/B_gfreq.txt
 	mkdir -p plots

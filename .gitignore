@@ -3,6 +3,7 @@ pictures/
 data/gene_sets/
 data/annotations/
 data/frequencies/
+plots/
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
