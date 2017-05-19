@@ -2,26 +2,27 @@
 # produces a list of GO terms with their frequency in a given host group.
 # Cyril Matthey-Doret
 # 18.05.2017
-# TODO: REPLACE PATHS TO MAKEFILE COMPATIBLE VERSIONS
 
 import re  # Regular expressions support
 from sys import argv  # Using command line arguments
 import pandas as pd  # Convenient DataFrames
 import MySQLdb  # Sending SQL queries to GO consortium database
-from os.path import basename
-from numpy import median
-from copy import copy
-
+from os.path import basename  # Allows to remove path from filename
+from numpy import median  # fast vectorized median method
+from copy import copy  # copy data structures
+from scipy.stats import fisher_exact
+import numpy as np
 
 
 """ Loading data """
 
-#group_file = open('data/gene_sets/BH_genes.txt','r')
+# group_file = open('../data/gene_sets/BH_genes.txt','r')
 group_file = open(argv[1],'r')  # OrthoMCL table for input host group
 group_content = group_file.read()  # Reading whole file as a string
 group_content = re.split(r'[\n\t]',group_content)
 group_content = filter(None, group_content)
 # Splitting strain|gene doublets
+
 eggNOG = pd.read_csv('data/eggNOG_all_annotations',sep='\t',header=None)
 # Reading eggNOG annotations (concatenated from all strains)
 strains = pd.read_csv('data/strain_list',sep='\t')
@@ -59,14 +60,73 @@ GO_set[5].map(lambda x: map(lambda y: GO_expand(y,GO_all),x))  # all strains
 # The first map will return each cell of column 5 and the second map will apply
 # the function of every element of the list in each cell.
 
-# Building GO occurences dictionary from dataframe
-GO_occ = pd.Series(GO_occ)  # Restructuring dict as Series
-GO_calc = GO_occ.to_frame(name='occ').merge(pd.Series(GO_all).to_frame('all'),
-                                              how='left',right_index=True,
-                                              left_index=True)
+"""
+Fisher exact test
+table:
+    | host | all |
+ GO | GOh  | GOa |
+!GO | nGOh | nGOa|
 
-GO_freq = GO_calc['occ']/GO_calc['all']
-# Frequencies are computed as occurences in host group/occurences in all strains
+GO: Gene Ontology term
+n: not
+h: host
+a: all
+
+Question: Is a GO term more frequent in the 'host' group than in 'all' strains?
+general concept: if Goh/nGOh >> GOa/nGOa -> GO enriched in group
+implementation: fisher_exact([[GOh,GOa],[nGOh,nGOa]])
+"""
+
+# Building dataframe with all GO terms found in host group.
+# GOh: number of occurences of each GO term in host group
+# GOa: number of occurences of each GO term in all strains
+GO_calc = pd.Series(GO_occ).to_frame(name='GOh').merge(
+    pd.Series(GO_all).to_frame('GOa'),how='left',right_index=True,
+    left_index=True)
+
+# Storing total number of GO terms occuring in both host group and all strains
+tot_GO = {'host':sum(GO_occ.itervalues()),
+          'all':sum(GO_all.itervalues())}
+
+# adding column for all occurences of other GO terms in:
+GO_calc['nGOh'] = GO_calc.GOh.apply(lambda x: tot_GO['host'] - x)  # host group
+GO_calc['nGOa'] = GO_calc.GOa.apply(lambda x: tot_GO['all'] - x)  # all strains
+
+def Fisher_row(r):
+    """
+    This function takes a row of DataFrame as input and performs Fisher's exact
+    test on it.
+    :param r: pandas DataFrame row to be used as input for Fisher's exact test
+    :return: a tuple containing the output of the test. Namely, the odds ratio
+    and the p-value
+    """
+    row=[[r['GOh'],r['GOa']],[r['nGOh'],r['nGOa']]]
+    return fisher_exact(row)
+
+def p_adjust_bh(p):
+    """
+    Benjamini-Hochberg p-value correction for multiple hypothesis testing.
+    :param p: a series of p-values
+    :return: an array of BH-corrected p-values (q-values)
+    """
+    p = np.asfarray(p)  # Storing p-values as numpy array
+    by_descend = p.argsort()[::-1]
+    # getting array of indexes sorting p-values in descending order
+    by_orig = by_descend.argsort()
+    # getting array of indexes sorting by_descend indexes back (used to move
+    # p-values in original order in the end)
+    steps = float(len(p)) / np.arange(len(p), 0, -1)  # Storing increasing steps
+    q = np.minimum(1, np.minimum.accumulate(steps * p[by_descend]))
+    # Correcting p-values and un-sorting back into original order
+    return q[by_orig]
+
+GO_calc['Fisher_out'] = GO_calc.apply(Fisher_row,axis=1)
+# Use exact Fisher test to measure enrichment
+GO_enrich=pd.DataFrame({'oddratios':GO_calc['Fisher_out'].apply(lambda r: r[0]),
+                          'pval':GO_calc['Fisher_out'].apply(lambda r: r[1])})
+# Splits Fisher test outputs into separate columns
+
+GO_enrich['qval'] = p_adjust_bh(GO_enrich['pval'])  # Correct p-values with BH
 
 """ Querying database """
 
@@ -75,27 +135,22 @@ ebi_connect = MySQLdb.connect(host = "mysql.ebi.ac.uk",user="go_select",
 # Establishing connection with EBI mirror of GO database
 
 query = "SELECT * FROM term WHERE acc IN ('%s')" % "','".join(map(str,list(
-    GO_freq.index)))
+    GO_enrich.index)))
 # SQL query string requesting all db entries corresponding to current host group
 
 sql_annot = pd.read_sql(query, con=ebi_connect)
 # Saving server response as dataframe
 
-ebi_connect.close()  # Closing connection
+ebi_connect.close()  # Closing connection to SQL server
 
 """ Filtering annotations """
 
-full_annot = sql_annot.merge(GO_freq.to_frame(name='freq'), left_on='acc',
+full_annot = sql_annot.merge(GO_enrich, left_on='acc',
                              right_index=True,how='inner')
 # Merging frequency and annotations into single dataframe
 
-full_annot = full_annot[full_annot.freq > full_annot.freq.median()]
-# Including only annotations with more than median frequency
-annot_bytype = full_annot.groupby('term_type')
-# Group annotations by category (mol. function, bio. process or cell. component)
-top_GO=annot_bytype.apply(lambda x: x.sort_values('freq',ascending=False)[0:5])
-# Sort annotations by number of occurences and only selecting 5 top annotations
-# for each GO term category
+top_GO = full_annot.loc[(full_annot['qval']<np.float(0.05))]
+# Including only annotations with q-values below cutoff
 
 host_group = basename(argv[1]).split('_')[0]
 top_GO.to_csv('data/annotations/'+host_group+'_annot.txt',sep='\t')
