@@ -23,6 +23,7 @@ import numpy as np  # Fast data structures and vectorized methods
 
 # group_file = open('../data/gene_sets/BH_genes.txt','r')
 group_file = open(argv[1],'r')  # OrthoMCL table for input host group
+host_group = basename(argv[1]).split('_')[0]  # Extracting host group name
 group_content = group_file.read()  # Reading whole file as a string
 
 # Splitting strain|gene doublets
@@ -32,8 +33,6 @@ group_content = filter(None, group_content)
 
 eggNOG = pd.read_csv('data/eggNOG_all_annotations',sep='\t',header=None)
 # Reading eggNOG annotations (concatenated from all other strains)
-strains = pd.read_csv('data/strain_list',sep='\t')
-# Strain list for ID conversions
 
 """ Processing annotations """
 
@@ -86,6 +85,7 @@ Question:
     Is a GO term more frequent in the 'host' group than in 'all other' strains?
 general concept:
     if Goh/nGOh >> GOa/nGOa -> GO enriched in host group
+    This is given by the "odd ratio": OR = (GOh*nGOa)/(GOa*nGOh)
 implementation:
     fisher_exact([[GOh,GOa],[nGOh,nGOa]])
 """
@@ -154,7 +154,7 @@ ebi_connect = MySQLdb.connect(host = "mysql.ebi.ac.uk",user="go_select",
 query = "SELECT * FROM term WHERE acc IN ('%s')" % "','".join(map(str,list(
     GO_enrich.index)))
 # SQL query string requesting all db entries corresponding to current host group
-
+print('Sending SQL request for GO terms of group ' + host_group +'...' )
 sql_annot = pd.read_sql(query, con=ebi_connect)
 # Saving server response as dataframe
 
@@ -169,6 +169,7 @@ full_annot = sql_annot.merge(GO_enrich, left_on='acc',
 top_GO = full_annot.loc[(full_annot['qval']<=np.float(0.05))]
 # Including only annotations with q-values below cutoff
 
-host_group = basename(argv[1]).split('_')[0]
 top_GO.to_csv('data/annotations/'+host_group+'_annot.txt',sep='\t')
 # Writing dataframe to output file
+
+print('Enrichment analysis of group ' + host_group +' performed successfully !' )

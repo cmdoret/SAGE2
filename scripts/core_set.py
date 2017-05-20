@@ -59,3 +59,4 @@ with open(join("data","gene_sets",in_name),'r') as ortho:
             outfile.write(line)
             # if so, writing line to output file
 outfile.close()
+print("Extracted core gene families for group "+''.join(sorted(group_set)),".")
