@@ -19,6 +19,8 @@ To run the analysis from scratch, simply ```cd``` to the main directory and type
 
 * [R 3.3.x](https://www.r-project.org/):
   + [VennDiagram](https://cran.r-project.org/web/packages/VennDiagram/index.html)
+  + [ggplot2](http://ggplot2.org/)
+  + [gridExtra](https://cran.r-project.org/web/packages/gridExtra/index.html)
 
 * A UNIX environment with a bash shell and common tools available, such as Makefile.
 
