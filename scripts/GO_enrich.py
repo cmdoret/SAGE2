@@ -18,7 +18,6 @@ from copy import copy  # copy data structures
 from scipy.stats import fisher_exact  # Used for enrichment test
 import numpy as np  # Fast data structures and vectorized methods
 
-
 """ Loading data """
 
 # group_file = open('../data/gene_sets/BH_genes.txt','r')
@@ -31,6 +30,13 @@ group_content = re.split(r'[\n\t]',group_content)
 group_content = filter(None, group_content)
 # In case there are consecutive tabs/newlines, empty items are removed
 
+if len(argv) == 3:  # If a second file was given, compare first vs second
+    group2_file = open(argv[2],'r')
+    group2_content = group2_file.read()
+    host_group2 = basename(argv[2]).split('_')[0]
+    group2_content = re.split(r'[\n\t]',group2_content)
+    group2_content = filter(None, group2_content)
+
 eggNOG = pd.read_csv('data/eggNOG_all_annotations',sep='\t',header=None)
 # Reading eggNOG annotations (concatenated from all other strains)
 
@@ -40,10 +46,12 @@ GO = eggNOG[[0,5]]  # Only keeping GO terms and corresponding gene ID
 
 GO_group = GO[GO[0].isin(group_content)].dropna()
 # Keeping only Genes that are in orthoMCL table of current host group
-
-GO_set = copy(GO).dropna()  # For all strains Duplicating table and removing NAs
-# Excluding rows in host group to keep only all other strains (not in host group)
-GO_set = GO_set.drop(GO_group.index)
+if len(argv) == 3:  # For dual group comparison
+    GO_set = GO[GO[0].isin(group2_content)].dropna()
+else:  # For one versus all others comparison
+    GO_set = copy(GO).dropna()  # For all strains Duplicating table and removing NAs
+    # Excluding rows in host group to keep only all other strains (not in host group)
+    GO_set = GO_set.drop(GO_group.index)
 
 # Splitting GO terms into a list for each gene
 GO_group[5] = GO_group[5].str.split(',')  # GO terms in host group
@@ -75,11 +83,6 @@ table:
     | host | all |
  GO | GOh  | GOa |
 !GO | nGOh | nGOa|
-
-GO: Gene Ontology term
-n: not
-h: host
-a: all other
 
 Question:
     Is a GO term more frequent in the 'host' group than in 'all other' strains?
@@ -142,7 +145,6 @@ GO_calc['Fisher_out'] = GO_calc.apply(Fisher_row,axis=1)
 GO_enrich=pd.DataFrame({'oddratios':GO_calc['Fisher_out'].apply(lambda r: r[0]),
                           'pval':GO_calc['Fisher_out'].apply(lambda r: r[1])})
 # Splits Fisher test outputs into separate columns
-
 GO_enrich['qval'] = p_adjust_bh(GO_enrich['pval'])  # Correct p-values with BH
 
 """ Querying database """
@@ -168,8 +170,10 @@ full_annot = sql_annot.merge(GO_enrich, left_on='acc',
 
 top_GO = full_annot.loc[(full_annot['qval']<=np.float(0.05))]
 # Including only annotations with q-values below cutoff
-
-top_GO.to_csv('data/annotations/'+host_group+'_annot.txt',sep='\t')
-# Writing dataframe to output file
+if len(argv) == 3:  # Writing dataframe to output file (group1 vs group2)
+    top_GO.to_csv('data/annotations/'+host_group+'vs'+host_group2+'_annot.txt',
+                  sep='\t')
+else:  # Writing dataframe to output file (group versus all others)
+    top_GO.to_csv('data/annotations/'+host_group+'_annot.txt',sep='\t')
 
 print('Enrichment analysis of group ' + host_group +' performed successfully !' )
