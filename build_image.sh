@@ -1,1 +1,1 @@
- docker build --rm --force-rm -t sage2_image .
+docker build --rm -t sage2_image .

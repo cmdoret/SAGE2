@@ -13,10 +13,11 @@ RUN apt-get update && apt-get install -y \
     python-pip \
     python-dev \
     libmysqlclient-dev \
-    r-base
+    r-base \
+    libcairo2-dev
 
 # install R dependencies
-RUN echo 'install.packages(c("ggplot2","grid","gridExtra","VennDiagram"), repos="http://cran.us.r-project.org",dependencies=TRUE)' > /tmp/packages.R \
+RUN echo 'install.packages(c("ggplot2","gridExtra","VennDiagram"), repos="http://cran.us.r-project.org",dependencies=TRUE)' > /tmp/packages.R \
 	&& Rscript /tmp/packages.R
 
 # install python dependencies
@@ -24,5 +25,5 @@ RUN pip install -r dependencies.txt
 
 
 # Run app.py when the container launches
-CMD ["make"]
+CMD ["make -B"]
 
