@@ -15,7 +15,8 @@ To run the analysis from scratch, simply ```cd``` to the main directory and type
   + [numpy](http://www.numpy.org/)
   + [pandas](http://pandas.pydata.org/pandas-docs/stable/index.html)
   + [scipy](https://www.scipy.org/install.html)
-  + [MySQLdb](http://mysql-python.sourceforge.net/MySQLdb.html):
+  + [MySQLdb](http://mysql-python.sourceforge.net/MySQLdb.html)
+  + [BioPython](http://biopython.org/)
 
 * [R 3.3.x](https://www.r-project.org/):
   + [VennDiagram](https://cran.r-project.org/web/packages/VennDiagram/index.html)

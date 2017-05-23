@@ -42,12 +42,8 @@ plots/B_histo.pdf : scripts/histo_freq.R $(FREQ)/B_gfreq.txt
 $(ANNOT)/B_annot.txt : scripts/GO_enrich.py $(SDIR)/B_genes.txt
 	mkdir -p $(ANNOT)
 	for f in $(GROUPS);do python2 $< $(SDIR)/"$$f"_genes.txt;done;
-	python2 $< $(SDIR)/B_genes.txt $(SDIR)/H_genes.txt
-	python2 $< $(SDIR)/H_genes.txt $(SDIR)/B_genes.txt
 
 # Generating piechart from oddratios of significant GO terms
 plots/B_GOpie.pdf : scripts/anno_plot.R $(ANNOT)/B_annot.txt
 	mkdir -p plots
 	for f in $(GROUPS);do Rscript $< $(ANNOT)/"$$f"_annot.txt;done;
-	Rscript $< $(ANNOT)/BvsH_annot.txt
-	Rscript $< $(ANNOT)/HvsB_annot.txt
