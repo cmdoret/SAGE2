@@ -3,7 +3,7 @@ include config.mk
 freqs=$(patsubst $(SDIR)%_genes.txt, $(FREQ)/%_gfreq.txt, $(GROUPS))
 
 .PHONY : all
-all : plots/Venn_gene_sets.pdf plots/B_GOpie.pdf plots/B_histo.pdf
+all : plots/Venn_gene_sets.pdf plots/B_GObar.pdf plots/B_histo.pdf
 
 # Generating Venn diagram
 plots/Venn_gene_sets.pdf : scripts/venn_genfam.R $(SDIR)/gene_number.csv $(SDIR)/core_number.csv 
@@ -44,6 +44,6 @@ $(ANNOT)/B_annot.txt : scripts/GO_enrich.py $(SDIR)/B_genes.txt
 	for f in $(GROUPS);do python2 $< $(SDIR)/"$$f"_genes.txt;done;
 
 # Generating piechart from oddratios of significant GO terms
-plots/B_GOpie.pdf : scripts/anno_plot.R $(ANNOT)/B_annot.txt
+plots/B_GObar.pdf : scripts/anno_plot.R $(ANNOT)/B_annot.txt
 	mkdir -p plots
-	for f in $(GROUPS);do Rscript $< $(ANNOT)/"$$f"_annot.txt;done;
+	Rscript $< $(ANNOT)/B_annot.txt
