@@ -56,6 +56,7 @@ GOcbar <- function(GO_folder){
     pdf(out_file)
     print(bp)
     dev.off()
+    bp
   }
 }
 
