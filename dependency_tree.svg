@@ -18,10 +18,40 @@
    inkscape:version="0.91 r13725"
    sodipodi:docname="dependency_tree.svg"
    inkscape:export-filename="/home/cyril/Documents/Master/sem_2/SAGE2/src/dependency_tree.png"
-   inkscape:export-xdpi="600"
-   inkscape:export-ydpi="600">
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
   <defs
      id="defs4">
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker5186"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         id="path5188" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker5106"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         id="path5108"
+         inkscape:connector-curvature="0" />
+    </marker>
     <linearGradient
        id="linearGradient5294"
        inkscape:collect="always">
@@ -65,7 +95,8 @@
        refX="0"
        id="marker5030"
        style="overflow:visible"
-       inkscape:isstock="true">
+       inkscape:isstock="true"
+       inkscape:collect="always">
       <path
          inkscape:connector-curvature="0"
          id="path5032"
@@ -126,7 +157,8 @@
        refX="0"
        id="marker8941"
        style="overflow:visible"
-       inkscape:isstock="true">
+       inkscape:isstock="true"
+       inkscape:collect="always">
       <path
          id="path8943"
          d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
@@ -644,9 +676,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.4142136"
-     inkscape:cx="253.19459"
-     inkscape:cy="126.76131"
+     inkscape:zoom="2.0000001"
+     inkscape:cx="276.29547"
+     inkscape:cy="321.37975"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -2728,15 +2760,6 @@
        inkscape:connection-end="#g6521"
        sodipodi:nodetypes="cc" />
     <path
-       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.44799995;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker7925)"
-       d="m 588.32804,1451.6041 82.54835,39.9678"
-       id="path7193"
-       inkscape:connector-type="polyline"
-       inkscape:connector-curvature="0"
-       inkscape:connection-start="#g8973"
-       inkscape:connection-end="#g5276"
-       sodipodi:nodetypes="cc" />
-    <path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.44799078;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker7825)"
        d="m 686.89796,1507.0863 0,39.0052"
        id="path7241"
@@ -3045,5 +3068,10 @@
          y="-710.77271"
          transform="matrix(0,-1,-1,0,0,0)" />
     </g>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1.44799995;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;marker-end:url(#marker5186)"
+       d="m 436.17275,1363.3164 c 162.63455,0 162.63455,0 162.63455,0 67.5287,127.6328 67.5287,127.6328 67.5287,127.6328"
+       id="path5096"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
