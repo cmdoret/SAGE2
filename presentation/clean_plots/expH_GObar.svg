@@ -147,9 +147,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98994949"
-     inkscape:cx="418.45938"
-     inkscape:cy="687.85623"
+     inkscape:zoom="1.4"
+     inkscape:cx="396.2673"
+     inkscape:cy="648.05875"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -167,7 +167,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1307,7 +1307,7 @@
          sodipodi:role="line"
          id="tspan4593"
          x="37.052124"
-         y="568.20978">Fatty acide</tspan><tspan
+         y="568.20978">Fatty acid</tspan><tspan
          sodipodi:role="line"
          x="37.052124"
          y="590.08478"
