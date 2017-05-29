@@ -18,7 +18,8 @@ col_dict <- c(B='#87cdebff',
 
 pdf(paste0('plots/',out_name,"_histo.pdf"))
 hist(freq_series,col=col_dict[out_name],
-     breaks=length(unique(freq_series)),xlab = 'Number of strains')
+     breaks=length(unique(freq_series)),xlab = 'Number of strains',
+     ylab = "Density", main = out_name)
 # Write histogram as pdf file
 dev.off()
 print(paste0("Generated histogram for group ", out_name))
