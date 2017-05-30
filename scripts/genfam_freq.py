@@ -10,7 +10,9 @@ store_freq = []  # Initializing container for frequencies
 with open(ortho_file,'r') as ortho:  # Opening file in read mode
     for line in ortho:  # Iterating over line
         genfam = line.split('\t')  # Splitting genes in each gene families
-        store_freq.append(str(len(genfam)))
+        strains = [x.split('|')[0] for x in genfam]
+        strains = set(strains)
+        store_freq.append(str(len(strains)))
         # Appending number of occurences to store_freq
 
 group_name = basename(ortho_file).split('_')[0]  # Extract group from filename
