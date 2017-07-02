@@ -52,16 +52,17 @@ for x in files: files[x].close()  # closing all output files in a loop
 fasta = {} # List of each strain with its parsed FASTA content
 # Structure of 'fasta': {'H':{'strain1':['gene1','gene2']},...}
 for group in ID:  # Iterating over hosts (H, B and O)
-    fasta[group] = {}  # Initiating new dictionary for FASTA parsing
+    fasta[group] = []  # Initiating new dictionary for FASTA parsing
     for strain in ID[group]:  # Iterating over strains in given gtoup
         prefix = gnm[gnm.OrthoMCL_prefix==strain].Strain_prefix.values[0]
         # Extracting strain prefix from strain list for given orthoMCL prefix
         fa_file = join('data','genomes',prefix + '.faa')
-        fasta[group] =[strain + '|' + filter(None,re.split("[|_]",gene.id))[-1]
+        fasta[group] += [strain + '|' + filter(None,re.split("[|_]",gene.id))[-1]
                                for gene in SeqIO.parse(fa_file,'fasta')]
         # Using BioPython to parse fasta file and store all genes in dictionary
         # Only the gene ID is extracted and the strain name is added to form
         # an orthoMCL-compatible entry.
+
     uniq_list = []  # List to store unique genes.
     gr_ortho = open(join('data','gene_sets',group + '_genes.txt'),'r').read()
     # Storing content of orthoMCL file for current group
