@@ -24,7 +24,7 @@ for L in range(1,len(groups)+1):
         combi = ''.join(combi)  # Tuple output concatenated to string
         files[combi] = open(join("data","gene_sets",combi + "_genes.txt"),'w')
         # Each file is a dictionary value with the group as key (e.g. "BH").
-gnm = pd.read_csv(join("data","strain_list"),sep="\t")
+gnm = pd.read_csv(join("../data","strain_list"),sep="\t")
 # Contains genomes ID's
 ID = {}
 for g in groups:
@@ -53,7 +53,7 @@ fasta = {} # List of each strain with its parsed FASTA content
 # Structure of 'fasta': {'H':{'strain1':['gene1','gene2']},...}
 for group in ID:  # Iterating over hosts (H, B and O)
     fasta[group] = []  # Initiating new dictionary for FASTA parsing
-    for strain in ID[group]:  # Iterating over strains in given gtoup
+    for strain in ID[group]:  # Iterating over strains in given group
         prefix = gnm[gnm.OrthoMCL_prefix==strain].Strain_prefix.values[0]
         # Extracting strain prefix from strain list for given orthoMCL prefix
         fa_file = join('data','genomes',prefix + '.faa')
@@ -64,17 +64,19 @@ for group in ID:  # Iterating over hosts (H, B and O)
         # an orthoMCL-compatible entry.
 
     uniq_list = []  # List to store unique genes.
-    gr_ortho = open(join('data','gene_sets',group + '_genes.txt'),'r').read()
+    gr_ortho = open(join('data','mclOutput'),'r').read()
+    #gr_ortho = open(join('data','gene_sets',group + '_genes.txt'),'r').read()
     # Storing content of orthoMCL file for current group
-    track_uniq = [0,0]  # Tracking unique genes for info
-    for gene in fasta[group]:  # Iterating over genes from fasta entries
+    track_uniq = [0,0]  # Tracking [total, unique] genes for info
+    for gene in fasta[group]:
+        # Iterating over genes from fasta entries
         if gene in gr_ortho:  # Checking if gene is already in ortho table
-            track_uniq[0] += 1  # incrementing 'unique gene count'
-            uniq_list.append(gene)  # If not, unique gene -> append to list
+            track_uniq[0] += 1  # incrementing total gene count
         else:
-            track_uniq[1] += 1  # Incrementing non-unique gene count
+            track_uniq[1] += 1  # Incrementing unique gene count
+            uniq_list.append(gene)  # If not, unique gene -> append to list
     print(('{0} genes added to orthoMCL table of group {1} out of {2} in FASTA'+
-           ' files.').format(track_uniq[0],group,track_uniq[0]+track_uniq[1]))
+           ' files.').format(track_uniq[1],group,track_uniq[0]+track_uniq[1]))
     add_ortho = open(join('data','gene_sets',group + '_genes.txt'),'a')
     # Opening file in append mode to write unique genes at the end
     for uniq in uniq_list: add_ortho.write(uniq +'\n')
