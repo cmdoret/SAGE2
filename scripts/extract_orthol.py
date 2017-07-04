@@ -70,7 +70,8 @@ for group in ID:  # Iterating over hosts (H, B and O)
     track_uniq = [0,0]  # Tracking [total, unique] genes for info
     for gene in fasta[group]:
         # Iterating over genes from fasta entries
-        if gene in gr_ortho:  # Checking if gene is already in ortho table
+        gene_regex = re.escape(gene) + r"[\t\n]"
+        if re.search(gene_regex, gr_ortho):  # Checking if gene is already in ortho table
             track_uniq[0] += 1  # incrementing total gene count
         else:
             track_uniq[1] += 1  # Incrementing unique gene count
