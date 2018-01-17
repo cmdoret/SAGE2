@@ -24,7 +24,7 @@ for L in range(1,len(groups)+1):
         combi = ''.join(combi)  # Tuple output concatenated to string
         files[combi] = open(join("data","gene_sets",combi + "_genes.txt"),'w')
         # Each file is a dictionary value with the group as key (e.g. "BH").
-gnm = pd.read_csv(join("../data","strain_list"),sep="\t")
+gnm = pd.read_csv(join("data","strain_list"),sep="\t")
 # Contains genomes ID's
 ID = {}
 for g in groups:
