@@ -10,8 +10,10 @@ This repository contains the code required to re-run the analysis of host specif
 
 To run the analysis from scratch, simply ```cd``` to the main directory and type `make` on the command line. The Makefile dependency tree is illustrated at the end of the README.
 
+To run the GO enrichment analysis, type `make annot` after having run the main analysis.
+
 ### dependencies:
-* [Python 2](https://www.python.org/) with the following packages installed:
+* [Python 3](https://www.python.org/) with the following packages installed:
   + [numpy](http://www.numpy.org/)
   + [pandas](http://pandas.pydata.org/pandas-docs/stable/index.html)
   + [scipy](https://www.scipy.org/install.html)
@@ -56,5 +58,7 @@ To run the analysis from scratch, simply ```cd``` to the main directory and type
 ### Dependency tree:
 
 Below is a graphical representation of the relationship between data files and scripts showing which files depend on which. This dependency tree illustrates in what order Makefile will run the different components of the pipeline.
+
+Note the right branch of the tree (GO enrichment test) needs to be run separately from the whole pipeline as described above.
 
 ![Makefile dependency tree](./dependency_tree.png)

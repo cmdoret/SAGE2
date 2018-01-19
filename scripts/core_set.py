@@ -7,10 +7,12 @@
 from sys import argv
 from os.path import join
 from copy import copy
+import pandas as pd
 import re
 
+s_path = argv[1]  # path to list of strains
 # Only keeping parameters containing one species group
-param = [h for h in argv[1:] if re.compile(r'[BHO]').search(h)]
+param = [h for h in argv[2:] if re.compile(r'[BHO]').search(h)]
 groups = []
 
 # Parsing parameters so that BHO works like B H O
@@ -22,10 +24,10 @@ for p in param:
 group_set = set(groups)
 
 # List of all strains:
-all_strains = {'H':['JF72','F259','JG30','JF76','F260','F261','F262','F263','JF73','JF74',
-     'JF75','WB8','WB10','L185','L186','L184','L183'],
-'B':['F225','F230','F233','F234','F236','F237','F228','F245','F246','F247'],
-'O':['LA14','LA2','LDB','LGAS','LHV','LJP','WANG','JG29']}
+s_tbl = pd.read_csv(s_path, sep='\t')
+all_strains = {k:list(s_tbl.loc[s_tbl.host_group == k,"OrthoMCL_prefix"])
+               for k in ['B','H','O']}
+
 
 # Subsetting strains with hosts matching input parameters
 strains=[]
@@ -59,4 +61,4 @@ with open(join("data","gene_sets",in_name),'r') as ortho:
             outfile.write(line)
             # if so, writing line to output file
 outfile.close()
-print("Extracted core gene families for group "+''.join(sorted(group_set)),".")
+print("Extracted core gene families for group "+''.join(sorted(group_set)))

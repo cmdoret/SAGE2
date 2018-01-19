@@ -11,7 +11,8 @@
 import re  # Regular expressions support
 from sys import argv  # Using command line arguments
 import pandas as pd  # Convenient DataFrames
-import MySQLdb  # Sending SQL queries to GO consortium database
+#import MySQLdb  # Sending SQL queries to GO consortium database
+import mysql.connector
 from os.path import basename  # Allows to remove path from filename
 from numpy import median  # fast vectorized median method
 from copy import copy  # copy data structures
@@ -37,7 +38,7 @@ if len(argv) == 3:  # If a second file was given, compare first vs second
     group2_content = re.split(r'[\n\t]',group2_content)
     group2_content = filter(None, group2_content)
 
-eggNOG = pd.read_csv('data/eggNOG_all_annotations',sep='\t',header=None)
+eggNOG = pd.read_csv('data/eggNOG_all_annotations.txt',sep='\t',header=None)
 # Reading eggNOG annotations (concatenated from all other strains)
 
 """ Processing annotations """
@@ -104,8 +105,8 @@ GO_calc = pd.Series(GO_occ).to_frame(name='GOh').merge(
 GO_calc.GOa = GO_calc.GOa.fillna(value=0)  # Replacing NA's with 0's
 
 # Storing total number of GO terms occuring in host group and all other strains
-tot_GO = {'host':sum(GO_occ.itervalues()),
-          'all':sum(GO_all.itervalues())}
+tot_GO = {'host':sum(GO_occ.values()),
+          'all':sum(GO_all.values())}
 
 # adding column for all occurences of other GO terms in:
 GO_calc['nGOh'] = GO_calc.GOh.apply(lambda x: tot_GO['host'] - x)  # host group
@@ -149,8 +150,9 @@ GO_enrich['qval'] = p_adjust_bh(GO_enrich['pval'])  # Correct p-values with BH
 
 """ Querying database """
 
-ebi_connect = MySQLdb.connect(host = "mysql.ebi.ac.uk",user="go_select",
-                             passwd="amigo",db="go_latest",port=4085)
+
+ebi_connect = mysql.connector.connect(host = "mysql.ebi.ac.uk",user="go_select",
+                             passwd="amigo",database="go_latest",port=4085)
 # Establishing connection with EBI mirror of GO database
 
 query = "SELECT * FROM term WHERE acc IN ('%s')" % "','".join(map(str,list(

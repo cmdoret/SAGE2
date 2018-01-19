@@ -1,4 +1,4 @@
-# This scripts counts the number of strains in which each gene family is present.
+# This script counts the number of strains in which each gene family is present.
 # Laurent Casini, Cyril Matthey-Doret
 # 16.05.2017
 

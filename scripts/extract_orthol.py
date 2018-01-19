@@ -9,12 +9,14 @@
 # 04.04.2017
 
 import itertools
-from os.path import join
+from os.path import join, isfile
+from sys import argv
 import pandas as pd
 from Bio import SeqIO
 import re
 
 ## Loading data
+gfam_path, s_path = argv[1], argv[2]
 files = {}  # Data structure containing output files
 groups = ['B','H','O']
 # Three groups considered here: Bumblebee , Honeybee, Outgroup
@@ -24,7 +26,7 @@ for L in range(1,len(groups)+1):
         combi = ''.join(combi)  # Tuple output concatenated to string
         files[combi] = open(join("data","gene_sets",combi + "_genes.txt"),'w')
         # Each file is a dictionary value with the group as key (e.g. "BH").
-gnm = pd.read_csv(join("data","strain_list"),sep="\t")
+gnm = pd.read_csv(s_path,sep="\t")
 # Contains genomes ID's
 ID = {}
 for g in groups:
@@ -32,11 +34,11 @@ for g in groups:
 # Honeybee, bumblebee and outgroup-bacterial genomes
 
 # Loading ortholog table and creating output files
-ortho_tab = open(join("data","mclOutput"),'r')
+ortho_tab = open(gfam_path,'r')
 
 ## Parsing MCL table
 for line in ortho_tab:  # Each line is a gene family
-    tmp = line.split("\t")  # split line by word (tab separated)
+    tmp = line.rstrip('\n').split("\t")  # split line by word (tab separated)
     comb_group = set()  # Is this family present in bumble/honeybees/outgroup
     for word in tmp: # For each word (a word is: "strain|gene")
         gene = word.split("|")  # sparates strain from gene in a list
@@ -44,9 +46,15 @@ for line in ortho_tab:  # Each line is a gene family
             if gene[0] in ID[g]: # if the strain is in ...
                 comb_group.add(g)
     comb_group = ''.join(sorted(comb_group))  # compressing set to a string
-    files[comb_group].write(line)  # Writing line to file matching group
+    try:
+        files[comb_group].write(line)  # Writing line to file matching group
+    except KeyError:
+        print(line)
 ortho_tab.close()  # closing input file
 for x in files: files[x].close()  # closing all output files in a loop
+
+# Mini function to builf genome paths
+gen_path = lambda pref: join('data','genomes',pref + '.fasta')
 
 ## Append unique genes to each table
 fasta = {} # List of each strain with its parsed FASTA content
@@ -56,15 +64,21 @@ for group in ID:  # Iterating over hosts (H, B and O)
     for strain in ID[group]:  # Iterating over strains in given group
         prefix = gnm[gnm.OrthoMCL_prefix==strain].Strain_prefix.values[0]
         # Extracting strain prefix from strain list for given orthoMCL prefix
-        fa_file = join('data','genomes',prefix + '.faa')
-        fasta[group] += [strain + '|' + filter(None,re.split("[|_]",gene.id))[-1]
+
+        if isfile(gen_path(prefix)):
+            fa_file = gen_path(prefix)
+        else:
+            fa_file = gen_path(strain)
+
+        fasta[group] += [strain + '|' + list(filter(None,re.split("[|_]",gene.id)))[-1]
                                for gene in SeqIO.parse(fa_file,'fasta')]
+
         # Using BioPython to parse fasta file and store all genes in dictionary
         # Only the gene ID is extracted and the strain name is added to form
         # an orthoMCL-compatible entry.
 
     uniq_list = []  # List to store unique genes.
-    gr_ortho = open(join('data','mclOutput'),'r').read()
+    gr_ortho = open(gfam_path,'r').read()
     #gr_ortho = open(join('data','gene_sets',group + '_genes.txt'),'r').read()
     # Storing content of orthoMCL file for current group
     track_uniq = [0,0]  # Tracking [total, unique] genes for info
