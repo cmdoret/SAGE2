@@ -21,14 +21,14 @@ import numpy as np  # Fast data structures and vectorized methods
 
 """ Loading data """
 
-# group_file = open('../data/gene_sets/BH_genes.txt','r')
+#group_file = open('data/gene_sets/BH_genes.txt','r')
 group_file = open(argv[1],'r')  # OrthoMCL table for input host group
 host_group = basename(argv[1]).split('_')[0]  # Extracting host group name
 group_content = group_file.read()  # Reading whole file as a string
 
 # Splitting strain|gene doublets
 group_content = re.split(r'[\n\t]',group_content)
-group_content = filter(None, group_content)
+group_content = list(filter(None, group_content))
 # In case there are consecutive tabs/newlines, empty items are removed
 
 if len(argv) == 3:  # If a second file was given, compare first vs second
@@ -36,7 +36,7 @@ if len(argv) == 3:  # If a second file was given, compare first vs second
     group2_content = group2_file.read()
     host_group2 = basename(argv[2]).split('_')[0]
     group2_content = re.split(r'[\n\t]',group2_content)
-    group2_content = filter(None, group2_content)
+    group2_content = list(filter(None, group2_content))
 
 eggNOG = pd.read_csv('data/eggNOG_all_annotations.txt',sep='\t',header=None)
 # Reading eggNOG annotations (concatenated from all other strains)
@@ -72,8 +72,14 @@ def GO_expand(go, go_dict):
         go_dict[go] = 1  # If absent, add it as a new key
 
 GO_occ, GO_all = {},{}  # Inializing dict. for host group and all other strains
-GO_group[5].map(lambda x: map(lambda y: GO_expand(y,GO_occ),x))  # host group
-GO_set[5].map(lambda x: map(lambda y: GO_expand(y,GO_all),x))  # other strains
+for row in GO_group[5]:
+    for GOterm in row:
+        GO_expand(GOterm, GO_occ)
+for row in GO_set[5]:
+    for GOterm in row:
+        GO_expand(GOterm, GO_all)
+#GO_group[5].map(lambda x: map(lambda y: GO_expand(y,GO_occ),x))  # host group
+#GO_set[5].map(lambda x: map(lambda y: GO_expand(y,GO_all),x))  # other strains
 # Using nested maps to apply 'GO_expand' on each GO term.
 # The first map returns each cell of column '5' and the second map will apply
 # the function of every element of the list in each cell.
@@ -151,7 +157,7 @@ GO_enrich['qval'] = p_adjust_bh(GO_enrich['pval'])  # Correct p-values with BH
 """ Querying database """
 
 
-ebi_connect = mysql.connector.connect(host = "mysql.ebi.ac.uk",user="go_select",
+ebi_connect = mysql.connector.connect(host = "mysql-amigo.ebi.ac.uk",user="go_select",
                              passwd="amigo",database="go_latest",port=4085)
 # Establishing connection with EBI mirror of GO database
 
